@@ -1,4 +1,4 @@
-## Hvad faar vi meget op i?
+## Hvad gaar vi meget op i?
 
 Vi fokusere meget paa at:
 * Automatisere saa meget som muligt
