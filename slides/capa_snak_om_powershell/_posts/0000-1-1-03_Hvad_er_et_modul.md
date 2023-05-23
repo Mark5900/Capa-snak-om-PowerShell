@@ -61,4 +61,7 @@ FunctionsToExport      = 'Exit_RetryLater',
 
 ## Modul opbygning og struktur
 
-<img src="{{asset_folder}}/Capa.PowerShell.Module_Drawing of module setup.md at main.png" data-autoplay>
+<div class="r-hstack">
+    <img src="{{asset_folder}}/Capa.PowerShell.Module_Drawing of module setup.md at main.png" data-autoplay>
+    <img src="{{asset_folder}}/ModulesFileExplore.png" data-autoplay>
+</div>
