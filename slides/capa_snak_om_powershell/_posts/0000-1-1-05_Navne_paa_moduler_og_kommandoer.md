@@ -2,7 +2,10 @@
 
 * Undgå at brug noget at andre kunne finde på at bruge
 
-F.eks.:
+---
+
+## F.eks.:
+
 * `Capa.PowerShell.Module.PowerPack.Service` er langt men unikt navn
 * `Exit-PpCommandNotRecognized` burde være unikt nok til at undgå konflikter
   * Pp står for PowerPack
