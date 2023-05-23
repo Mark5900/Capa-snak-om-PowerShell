@@ -1,87 +1,42 @@
-<!doctype html>
-<html lang="en">
+---
+author: Alexander Naumann
+title: Markdown Slides | Overview
+description: Overview of slides by Alexander Naumann
+design: black 
+---
 
+
+<!DOCTYPE html>
+<html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-	<title>reveal.js</title>
-
-	<link rel="stylesheet" href="dist/reset.css">
-	<link rel="stylesheet" href="dist/reveal.css">
-	<link rel="stylesheet" href="dist/theme/black.css">
-
-	<!-- Theme used for syntax highlighted code -->
-	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+  {% include head.html %}
 </head>
-
 <body>
+  <a class="github-fork-ribbon right-top" href="{{site.githuburl}}" data-ribbon="Improve me on GitHub" title="Improve me on GitHub">Improve me on GitHub</a>
 	<div class="reveal">
 		<div class="slides">
-			<section data-markdown="Slides/Slide1
-			.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n" data-separator-notes="^Note:"
-				data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide2.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide2.1.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide3.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide4.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide4.1.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide5.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide5.1.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide5.2.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide6.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide7.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide8.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide9.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide10.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
-			<section data-markdown="Slides/Slide11.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"
-				data-separator-notes="^Note:" data-charset="iso-8859-15">
-			</section>
+        <section id="overview" data-markdown data-separator="\n---\n">
+            <script type="text/template">
+# Markdown Slides
+by Alexander Naumann
+
+<br>
+
+- This your landing page where you can link your presentations
+- If your are new to markdown slides, check the [introduction](/markdownslides/getting_started) slides to learn
+  - What can it do? 
+  - How to use it? 
+
+<br>
+<br>
+
+Also feel free to check out my [github](https://github.com/a-nau/) or [website](https://a-nau.github.io) :)
+
+            </script>
+        </section>
+			{{ content }}
 		</div>
 	</div>
-
-	<script src="dist/reveal.js"></script>
-	<script src="plugin/notes/notes.js"></script>
-	<script src="plugin/markdown/markdown.js"></script>
-	<script src="plugin/highlight/highlight.js"></script>
-	<script>
-		// More info about initialization & config:
-		// - https://revealjs.com/initialization/
-		// - https://revealjs.com/config/
-		Reveal.initialize({
-			hash: true,
-
-			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
-		});
-	</script>
+	{% include script.html %}
 </body>
-
 </html>
