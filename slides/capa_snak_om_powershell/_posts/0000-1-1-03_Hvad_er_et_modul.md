@@ -1,6 +1,6 @@
 # Hvad er et PowerShell modul?
 
-* Kan være bygget op paa mange måder
+* Kan være bygget op på mange måder
 * For det meste arbejder jeg med at lave PSM1 (PowerShell Module) & PSD1 (PowerShell Manifest) filer
 
 ---
