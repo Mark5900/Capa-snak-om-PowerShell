@@ -4,3 +4,4 @@
 * Script Signering?
   * Kræver man har et kode certifikat
   * Relativt let at indsætte i ens script, der findes måske også en måde at gøre det automatisk på hver gang man saver
+  * Snart et krav hos os
