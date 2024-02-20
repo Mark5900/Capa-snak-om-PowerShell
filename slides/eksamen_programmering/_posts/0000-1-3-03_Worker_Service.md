@@ -1,6 +1,10 @@
-## WindowsBackgroundService
+## WindowsBackgroundService.cs
 
-```csharp[23-29|40-56]
+1. Variabler
+2. List'er
+3. If-else, operators, foreach, try-catch (samme flow derned af)
+
+```csharp[23-29|30-31|39-56|60-78]
 using System.Diagnostics;
 using Capa_Error_Explorer;
 
