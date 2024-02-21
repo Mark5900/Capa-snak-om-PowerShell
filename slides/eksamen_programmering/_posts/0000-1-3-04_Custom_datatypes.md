@@ -1,8 +1,6 @@
 ## Custom datatypes
 
 - Klasser der bruges til at strukturer data.
-- Ingen metoder, kun felter
-	- Pånær på CapaError
 
 ```csharp [9-14]
 using System;
