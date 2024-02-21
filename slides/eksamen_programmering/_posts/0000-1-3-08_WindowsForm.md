@@ -1,6 +1,6 @@
 # Windows Form - FormExludePackages
 
-1. Synlighed (custom data types public)
+1. Synlighed
 2. Konstruktør
 
 ```csharp[15-18|22-26]

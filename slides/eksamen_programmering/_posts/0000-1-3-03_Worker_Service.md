@@ -2,7 +2,7 @@
 
 1. Variabler
 2. List'er
-3. If-else, operators, foreach, try-catch (samme flow derned af)
+3. If, operators, foreach, try-catch (samme flow derned af)
 
 ```csharp[23-29|30-31|39-56|60-78]
 using System.Diagnostics;

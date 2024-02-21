@@ -1,6 +1,7 @@
 ## Custom datatypes
 
 - Klasser der bruges til at strukturer data.
+- Synlighed
 
 ```csharp [9-14]
 using System;
