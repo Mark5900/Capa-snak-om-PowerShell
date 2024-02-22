@@ -1,9 +1,8 @@
 # Windows Form - FormExludePackages
 
-1. Synlighed
-2. Konstruktør
+1. Konstruktør
 
-```csharp[15-18|22-26]
+```csharp[22-26]
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
