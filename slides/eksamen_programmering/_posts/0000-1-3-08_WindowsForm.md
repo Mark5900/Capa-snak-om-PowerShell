@@ -1,9 +1,11 @@
-# Windows Form - FormExludePackages
+# Windows Form - Form2
 
 1. Konstruktør
 
-```csharp[22-26]
+```csharp[25-31]
+using CapaInstaller;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,29 +17,32 @@ using System.Windows.Forms;
 
 namespace Capa_Error_Explorer_Gui
 {
-    public partial class FormExcludePackages : Form
+    public partial class Form2 : Form
     {
         internal GlobalSettings globalSettings = new GlobalSettings();
         internal ErrorDB errorDB = new ErrorDB();
         internal FileLogging fileLogging = new FileLogging();
-        internal FormMain formMain;
+        internal List<CapaErrorTypeSummary> capaErrorTypeSummary = new List<CapaErrorTypeSummary>();
+        internal string packageName;
+        internal string packageVersion;
+        internal string cmpId = "All";
 
-        List<CapaErrorsExcludedPackages> capaErrorsExcludedPackages = new List<CapaErrorsExcludedPackages>();
-
-        public FormExcludePackages(FormMain formMain)
+        public Form2(string packageName, string packageVersion, string cmpId)
         {
-            this.formMain = formMain;
             InitializeComponent();
+            this.packageName = packageName;
+            this.packageVersion = packageVersion;
+            this.cmpId = cmpId;
         }
 
-        private void FormExcludePackages_Load(object sender, EventArgs e)
+        private void Form2_Load(object sender, EventArgs e)
         {
-            this.AddColumnsToGridView();
-
+            this.Text = $"Capa Error Explorer - Package: {packageName} {packageVersion}";
+            label1.Text = $"Package: {packageName} {packageVersion}";
             try
             {
                 this.errorDB.SetConnectionString(globalSettings.SQLServer, globalSettings.ErrorExplorerSQLDB);
-                capaErrorsExcludedPackages = errorDB.GetCapaErrorsExcludedPackages();
+                capaErrorTypeSummary = errorDB.GetCapaErrorTypeSummary(packageName, packageVersion, cmpId);
             }
             catch (Exception ex)
             {
@@ -45,101 +50,128 @@ namespace Capa_Error_Explorer_Gui
                 MessageBox.Show(ex.Message);
             }
 
+            this.AddColumnsToGridView();
             this.AddDataToGridView();
-            dataGridView1.Sort(dataGridView1.Columns["PackageName"], ListSortDirection.Ascending);
-            dataGridView1.Columns["PackageName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView1.Columns["Exclude"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView1.Sort(dataGridView1.Columns["TotalErrorCount"], ListSortDirection.Descending);
+            dataGridView1.Columns["CurrentErrorType"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView1.Columns["Status"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
 
         private void AddColumnsToGridView()
         {
             DataGridViewCheckBoxColumn chk = new DataGridViewCheckBoxColumn();
             chk.ValueType = typeof(bool);
-            chk.Name = "Exclude";
-            chk.HeaderText = "Exclude";
+            chk.Name = "Select";
+            chk.HeaderText = "";
 
             dataGridView1.Columns.Add(chk);
-            dataGridView1.Columns.Add("PackageName", "Package name");
-            dataGridView1.Columns.Add("PackageVersion", "Package version");
-            dataGridView1.Columns.Add("Type", "Type");
-
-            dataGridView1.Columns["PackageName"].ReadOnly = true;
-            dataGridView1.Columns["PackageVersion"].ReadOnly = true;
-            dataGridView1.Columns["Type"].ReadOnly = true;
+            dataGridView1.Columns.Add("CurrentErrorType", "Current Error Type");
+            dataGridView1.Columns.Add("Status", "Status");
+            dataGridView1.Columns.Add("TotalUnits", "Total Units");
+            dataGridView1.Columns.Add("TotalRunCount", "Total Run Count");
+            dataGridView1.Columns.Add("TotalErrorCount", "Total Error Count");
+            dataGridView1.Columns.Add("TotalCancelledCount", "Total Cancelled Count");
+            dataGridView1.Columns.Add("PackageRecurrence", "Package Recurrence");
         }
 
         private void AddDataToGridView()
         {
-            foreach (var item in capaErrorsExcludedPackages)
+            dataGridView1.Rows.Clear();
+            foreach (CapaErrorTypeSummary item in capaErrorTypeSummary)
             {
-                dataGridView1.Rows.Add(item.IsExcluded, item.PackageName, item.PackageVersion, item.TypePrettie);
+                dataGridView1.Rows.Add(false, item.CurrentErrorType, item.Status, item.TotalUnits, item.TotalRunCount, item.TotalErrorCount, item.TotalCancelledCount, item.PackageRecurrence);
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonRerunPackage_Click(object sender, EventArgs e)
         {
-            #region Export the data from the gridview
-            List<CapaErrorsExcludedPackages> capaErrorsExcludedPackagesNew = new List<CapaErrorsExcludedPackages>();
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                CapaErrorsExcludedPackages capaErrorsExcludedPackages = new CapaErrorsExcludedPackages();
-                capaErrorsExcludedPackages.PackageName = dataGridView1.Rows[i].Cells["PackageName"].Value.ToString();
-                capaErrorsExcludedPackages.PackageVersion = dataGridView1.Rows[i].Cells["PackageVersion"].Value.ToString();
-                capaErrorsExcludedPackages.IsExcluded = Convert.ToBoolean(dataGridView1.Rows[i].Cells["Exclude"].Value);
-                capaErrorsExcludedPackages.TypePrettie = dataGridView1.Rows[i].Cells["Type"].Value.ToString();
-
-                if (dataGridView1.Rows[i].Cells["Type"].Value.ToString() == "Computer")
-                {
-                    capaErrorsExcludedPackages.Type = 1;
-                }
-                else
-                {
-                    capaErrorsExcludedPackages.Type = 2;
-                }
-
-                capaErrorsExcludedPackagesNew.Add(capaErrorsExcludedPackages);
-            }
-            #endregion
-
-            #region Find changes
-            List<CapaErrorsExcludedPackages> capaErrorsExcludedPackagesChanges = new List<CapaErrorsExcludedPackages>();
-            foreach (var item in capaErrorsExcludedPackagesNew)
-            {
-                var itemOld = capaErrorsExcludedPackages.Where(x => x.PackageName == item.PackageName && x.PackageVersion == item.PackageVersion && x.Type == item.Type).FirstOrDefault();
-                if (itemOld == null)
-                {
-                    capaErrorsExcludedPackagesChanges.Add(item);
-                }
-                else
-                {
-                    if (itemOld.IsExcluded != item.IsExcluded)
-                    {
-                        capaErrorsExcludedPackagesChanges.Add(item);
-                        fileLogging.WriteLine($"Package was changed: {item.PackageName} {item.PackageVersion} ({item.TypePrettie}[{item.Type}]) {item.IsExcluded}");
-                    }
-                }
-            }
-            #endregion
-
-            #region Save changes
+            //TODO: Add code to rerun package
             try
             {
-                errorDB.SaveCapaErrorsExcludedPackages(capaErrorsExcludedPackagesChanges);
+                /*
+                SDK oSDK = new SDK();
+               bool bStatus = true;
+
+                bStatus = oSDK.SetDatabaseSettings(this.globalSettings.SQLServer, this.globalSettings.CapaSQLDB, false);
+                if (bStatus == false)
+                {
+                    throw new Exception("CI SDK: Error setting database settings");
+                }
+                else
+                {
+                    fileLogging.WriteLine("CI SDK: Database settings set");
+                }
+
+                ArrayList aCmp = new ArrayList();
+                aCmp = oSDK.GetManagementPoints();
+                foreach (var cmp in aCmp)
+                {
+                    fileLogging.WriteLine($"CMP: {cmp}");
+                }
+
+                bStatus = oSDK.SetInstanceManagementPoint("2");
+                if (bStatus == false)
+                {
+                    throw new Exception("CI SDK: Error setting instance management point");
+                }
+
+                bStatus = oSDK.SetUnitPackageStatus("VHHO-LAER-JFO", "Computer", "OS Install - WS Klar til Brug", "v1.0", "1", "Waiting");
+                if (bStatus == false)
+                {
+                    throw new Exception("CI SDK: Error setting unit package status");
+                }
+                */
+
+                string sSelectedTypes;
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (Convert.ToBoolean(row.Cells["Select"].Value) == true)
+                    {
+                        sSelectedTypes = row.Cells["CurrentErrorType"].Value.ToString();
+                    }
+                    else
+                    {
+                        // Skip row if not selected
+                        continue;
+                    }
+                }
+
             }
             catch (Exception ex)
             {
                 fileLogging.WriteErrorLine(ex.Message);
                 MessageBox.Show(ex.Message);
             }
-            #endregion
+        }
 
-            string cmpId = formMain.GetCmpId();
-            formMain.capaErrorSummary = errorDB.GetCapaErrorSummary(cmpId);
-            formMain.RemoveAllDataFromGridView();
-            formMain.AddDataToGridView();
-            formMain.MakeDataGridViewPretty();
-            this.formMain.Show();
-            this.Close();
+        private void Form2_Resize(object sender, EventArgs e)
+        {
+            int newX;
+            int newHeight;
+            int newWidth;
+
+            newX = this.Width - buttonRerunPackage.Width - 30;
+            buttonRerunPackage.Location = new Point(newX, buttonRerunPackage.Location.Y);
+
+            newHeight = this.Height - dataGridView1.Location.Y - 20;
+            newWidth = this.Width - 40;
+            dataGridView1.Size = new Size(newWidth, newHeight);
+        }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // If the cell is a checkbox, then toggle the value
+            if (dataGridView1.Columns[e.ColumnIndex].Name == "Select")
+            {
+                dataGridView1.Rows[e.RowIndex].Cells["Select"].Value = !(bool)dataGridView1.Rows[e.RowIndex].Cells["Select"].Value;
+            }
+            else
+            {
+                // Show msgbox with details
+                string currentErrorType = dataGridView1.Rows[e.RowIndex].Cells["CurrentErrorType"].Value.ToString();
+                Form3 form3 = new Form3(packageName, packageVersion, currentErrorType, cmpId);
+                form3.Show();
+            }
         }
     }
 }
